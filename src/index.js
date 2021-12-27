@@ -2,8 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 const App = () => {
-  return <h1>App</h1>;
+  function someFn() {
+    return function () {
+      return 'app';
+    };
+  }
+
+  const fn = someFn();
+
+  return <h1>{fn()}</h1>;
 };
+
 ReactDOM.render(
   <React.StrictMode>
     <App />
