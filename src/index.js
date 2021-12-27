@@ -2,15 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 const App = () => {
-  function someFn() {
-    return function () {
-      return 'app';
-    };
+  const arr = ['some', 'new', 'data'];
+
+  const newArr = arr.map(formatArray);
+
+  function formatArray(el) {
+    return el + ' some ';
   }
 
-  const fn = someFn();
-
-  return <h1>{fn()}</h1>;
+  return <h1>{newArr}</h1>;
 };
 
 ReactDOM.render(
