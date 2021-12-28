@@ -1,6 +1,6 @@
 import * as actions from './actionTypes';
 
-export function taskReducer(state, action) {
+export function taskReducer(state = [], action) {
   switch (action.type) {
     case actions.taskUpdated: {
       const newArray = [...state];
@@ -10,6 +10,6 @@ export function taskReducer(state, action) {
       return newArray;
     }
     default:
-      break;
+      return state;
   }
 }
