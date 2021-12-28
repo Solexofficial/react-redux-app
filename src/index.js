@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import * as actions from './store/actionTypes';
+import * as actions from './store/actions';
 import { initiateStore } from './store/store';
 
 const store = initiateStore();
 
 const App = () => {
   const [state, setState] = useState(store.getState());
+
   const completeTask = taskId => {
-    store.dispatch({ type: actions.taskUpdated, payload: { id: taskId, completed: true } });
+    store.dispatch(actions.taskCompleted(taskId));
   };
 
   const changeTitle = taskId => {
-    store.dispatch({ type: actions.taskUpdated, payload: { id: taskId, title: `New Title for ${taskId}` } });
+    store.dispatch(actions.titleChanged(taskId));
   };
 
   useEffect(() => {
