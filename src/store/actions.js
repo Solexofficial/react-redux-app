@@ -13,3 +13,10 @@ export function titleChanged(id) {
     payload: { id, title: `New Title for ${id}` },
   };
 }
+
+export function taskDeleted(id) {
+  return {
+    type: actionsTypes.taskDeleted,
+    payload: { id },
+  };
+}
