@@ -7,7 +7,9 @@ import { completeTask, getTasks, taskDeleted, titleChanged } from './store/task'
 const store = createStore();
 
 const App = () => {
-  const state = useSelector(state => state);
+  const state = useSelector(state => state.entities);
+  const isLoading = useSelector(state => state.isLoading);
+  const error = useSelector(state => state.error);
   const dispatch = useDispatch();
 
   const changeTitle = taskId => {
@@ -21,6 +23,14 @@ const App = () => {
   useEffect(() => {
     dispatch(getTasks());
   }, []);
+
+  if (isLoading) {
+    return <h1>Loading...</h1>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   return (
     <>
