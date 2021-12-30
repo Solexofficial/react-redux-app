@@ -3,17 +3,11 @@ import todosService from '../services/todos.service';
 
 const initialState = [];
 
-// const update = createAction('task/updated');
-// const remove = createAction('task/removed');
-
-// const TASK_UPDATED = 'task/updated';
-// const TASK_DELETED = 'task/deleted';
-
 const taskSlice = createSlice({
   name: 'task',
   initialState,
   reducers: {
-    recived(state, action) {
+    received(state, action) {
       return (state = action.payload);
     },
     update(state, action) {
@@ -27,7 +21,7 @@ const taskSlice = createSlice({
 });
 
 const { actions, reducer: taskReducer } = taskSlice;
-const { update, remove, recived } = actions;
+const { update, remove, received } = actions;
 
 const taskRequested = createAction('task/requested');
 const taskRequestFailed = createAction('task/requestFailed');
@@ -40,7 +34,7 @@ export const getTasks = () => async dispatch => {
   dispatch(taskRequested());
   try {
     const data = await todosService.fetchAll();
-    dispatch(recived(data));
+    dispatch(received(data));
   } catch (error) {
     dispatch(taskRequestFailed(error.message));
   }
