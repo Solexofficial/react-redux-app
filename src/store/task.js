@@ -12,6 +12,10 @@ const taskSlice = createSlice({
       state.entities = action.payload;
       state.isLoading = false;
     },
+    create(state, action) {
+      console.log('create action:', action.payload);
+      state.entities.push(action.payload);
+    },
     update(state, action) {
       const elementIndex = state.entities.findIndex(el => el.id === action.payload.id);
       state.entities[elementIndex] = { ...state.entities[elementIndex], ...action.payload };
@@ -23,20 +27,34 @@ const taskSlice = createSlice({
     taskRequested(state) {
       state.isLoading = true;
     },
-    taskRequestFailed(state, action) {
+    taskRequestFailed(state) {
       state.isLoading = false;
     },
   },
 });
 
 const { actions, reducer: taskReducer } = taskSlice;
-const { update, remove, received, taskRequested, taskRequestFailed } = actions;
+const { create, update, remove, received, taskRequested, taskRequestFailed } = actions;
 
-export const completeTask = id => (dispatch, getState) => {
+export const createTask = payload => async (dispatch, getState) => {
+  const state = getState();
+  const tasksLength = state.tasks.entities.length;
+
+  try {
+    const data = await todosService.create(payload);
+    const newData = { ...data, id: tasksLength + 1 };
+    dispatch(create(newData));
+  } catch (error) {
+    dispatch(taskRequestFailed());
+    dispatch(setError(error.message));
+  }
+};
+
+export const completeTask = id => dispatch => {
   dispatch(update({ id, completed: true }));
 };
 
-export const getTasks = () => async dispatch => {
+export const loadTasks = () => async dispatch => {
   dispatch(taskRequested());
   try {
     const data = await todosService.fetchAll();
@@ -54,5 +72,8 @@ export function titleChanged(id) {
 export function taskDeleted(id) {
   return remove({ id });
 }
+
+export const getTasks = () => state => state.tasks.entities;
+export const getTasksLoadingStatus = () => state => state.tasks.isLoading;
 
 export default taskReducer;

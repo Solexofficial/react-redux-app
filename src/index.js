@@ -1,15 +1,24 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider, useSelector, useDispatch } from 'react-redux';
+import { getError } from './store/errors';
 import createStore from './store/store';
-import { completeTask, getTasks, taskDeleted, titleChanged } from './store/task';
+import {
+  completeTask,
+  getTasksLoadingStatus,
+  getTasks,
+  loadTasks,
+  taskDeleted,
+  createTask,
+  titleChanged,
+} from './store/task';
 
 const store = createStore();
 
 const App = () => {
-  const state = useSelector(state => state.tasks.entities);
-  const isLoading = useSelector(state => state.tasks.isLoading);
-  const error = useSelector(state => state.errors.entities[0]);
+  const state = useSelector(getTasks());
+  const isLoading = useSelector(getTasksLoadingStatus());
+  const error = useSelector(getError());
   const dispatch = useDispatch();
 
   const changeTitle = taskId => {
@@ -20,8 +29,13 @@ const App = () => {
     dispatch(taskDeleted(taskId));
   };
 
+  const payload = {
+    title: 'new task',
+    completed: false,
+  };
+
   useEffect(() => {
-    dispatch(getTasks());
+    dispatch(loadTasks());
   }, []);
 
   if (isLoading) {
@@ -48,6 +62,7 @@ const App = () => {
           </li>
         ))}
       </ul>
+      <button onClick={() => dispatch(createTask(payload))}>Create Task</button>
     </>
   );
 };
